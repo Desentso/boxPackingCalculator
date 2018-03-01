@@ -1,68 +1,4 @@
 
-/*const smallBag = {width: 16, height: 23, length: 2};
-const mediumBag = {width: 22, height: 26, length: 2};
-const bigBag = {width: 14, height: 26, length: 10};
-
-const containerSize = ;
-
-const smallBagsAmount = ;
-const mediumBagsAmount = ;
-const bigBagsAmount = ;
-
-function newCont() {
-	const cont = [];
-	for (let y = 0; y < containerSize; y++){
-		cont.push([]);
-		for (let x = 0; x < containerSize; x++){
-			if (!cont[y][x]) {
-				cont[y].push([]);
-			};
-			for (let z = 0; z < containerSize; z++){
-				cont[y][x][z] = 0;
-			}
-		}
-	}
-	return cont;
-}
-
-const containers = [newCont()];
-
-console.log(cont);
-/*containerSize / bigBag.width;
-containerSize / bigBag.height;
-containerSize / bigBag.length;
-
-for (let i = 0; i < bigBagsAmount; i++) {
-
-	let freeY = 0;
-	let freeX = 0;
-	let freeZ = 0;
-
-	for (let y = 0; y < containerSize; y++){
-		for (let x = 0; x < containerSize; x++){
-			for (let z = 0; z < containerSize; z++){
-
-				if (cont[y][x][z] == 0) {
-					freeZ += 1;
-				} else {
-					freeZ = 0;
-				}
-			}
-		}
-	}
-}*/
-
-
-
-
-
-
-
-
-
-
-
-
 const smallBag = {width: 16, height: 23, length: 2};
 const mediumBag = {width: 22, height: 26, length: 2};
 const bigBag = {width: 14, height: 26, length: 10};
@@ -102,7 +38,7 @@ function fitBags() {
 
 		for (let i = 0; i < bags[type].bags; i++) {
 
-			fitBag(box, bags[type].bag);
+			//fitBag(box, bags[type].bag);
 
 			let noSpace = true;
 			nextBag:
@@ -121,7 +57,28 @@ function fitBags() {
 							noSpace = false;
 							break nextBag;
 
-							
+							//rotate w to h and h to w
+						} else if (bagFits(box, x, y, z, bags[type].bag.height, bags[type].bag.width, bags[type].bag.length)) {
+
+							//console.log("fits");
+							bags[type].fits += 1;
+							noSpace = false;
+							break nextBag;
+
+							//rotate w to h, h to l and l to w
+						} else if (bagFits(box, x, y, z, bags[type].bag.height, bags[type].bag.length, bags[type].bag.width)) {
+
+							//console.log("fits");
+							bags[type].fits += 1;
+							noSpace = false;
+							break nextBag;
+						 //rotate w to l and l to w
+						} else if (bagFits(box, x, y, z, bags[type].bag.length, bags[type].bag.height, bags[type].bag.width)) {
+
+							//console.log("fits");
+							bags[type].fits += 1;
+							noSpace = false;
+							break nextBag;
 						}
 					}
 				}
@@ -140,6 +97,57 @@ function fitBags() {
 
 }
 
+function fitBag(box, bag) {
+	let noSpace = true;
+	nextBag:
+	for (let y = 0; y < boxSize; y++){
+		for (let z = 0; z < boxSize; z++){
+			for (let x = 0; x < boxSize; x++){
+
+				if (box[y][z][x] == 1){
+					continue;
+				}
+
+				if (bagFits(box, x, y, z, bag.width, bag.height, bag.length)) {
+
+					//console.log("fits");
+					bag.fits += 1;
+					noSpace = false;
+					break nextBag;
+
+					//rotate w to h and h to w
+				} else if (bag.Fits(box, x, y, z, bag.height, bag.width, bag.length)) {
+
+					//console.log("fits");
+					bag.fits += 1;
+					noSpace = false;
+					break nextBag;
+
+					//rotate w to h, h to l and l to w
+				} else if (bag.Fits(box, x, y, z, bag.height, bag.length, bag.width)) {
+
+					//console.log("fits");
+					bag.fits += 1;
+					noSpace = false;
+					break nextBag;
+				 //rotate w to l and l to w
+				} else if (bag.Fits(box, x, y, z, bag.length, bag.height, bag.width)) {
+
+					//console.log("fits");
+					bag.fits += 1;
+					noSpace = false;
+					break nextBag;
+				}
+			}
+		}
+	}
+
+	if (noSpace) {
+		//console.log("Didn't find space");
+		bags[type].noFit += 1;
+		//Create new box and place it there
+	}
+}
 
 function bagFits(box, xp, yp, zp, width, height, length) {
 
@@ -177,5 +185,26 @@ function bagFits(box, xp, yp, zp, width, height, length) {
 	return fits;
 }
 
+function getFilledArea () {
+
+	let free = 0;
+	let all = 0;
+
+	for (let y = 0; y < boxSize; y++){
+		for (let z = 0; z < boxSize; z++){
+			for (let x = 0; x < boxSize; x++){
+
+				if (box[y][z][x] == 0){
+					free += 1;
+				}
+
+				all += 1;
+			}
+		}
+	}
+
+	console.log("FILLED: ", 1 - (free/all));
+}
 
 fitBags();
+getFilledArea();
