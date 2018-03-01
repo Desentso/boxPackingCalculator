@@ -86,11 +86,11 @@ class Calculator extends Component {
   	render() {
 	    return (
 	    	<div style={{margin: "50px 0"}}>
-				<InputField name="Small Bags" type="number" min="0" max="1000" value={this.state.smallBagsAmount} onChange={this.smallBagsOnChange} error={this.state.smallBagsError} errorText={this.state.smallBagsErrorText} />
-				<InputField name="Medium Bags" type="number" min="0" max="1000" value={this.state.mediumBagsAmount} onChange={this.mediumBagsOnChange} error={this.state.mediumBagsError} errorText={this.state.mediumBagsErrorText} />
-				<InputField name="Big Bags" type="number" min="0" max="1000" value={this.state.bigBagsAmount} onChange={this.bigBagsOnChange} error={this.state.bigBagsError} errorText={this.state.bigBagsErrorText} />
+				<InputField name="Small Bags" type="number" min="0" max="1000" value={this.state.smallBagsAmount} onChange={this.smallBagsOnChange} error={this.state.smallBagsError} errorText={this.state.smallBagsErrorText} info="200g bag, 16cm x 23cm x 2cm" />
+				<InputField name="Medium Bags" type="number" min="0" max="1000" value={this.state.mediumBagsAmount} onChange={this.mediumBagsOnChange} error={this.state.mediumBagsError} errorText={this.state.mediumBagsErrorText} info="400g bag, 22cm x 26cm x 2cm" />
+				<InputField name="Big Bags" type="number" min="0" max="1000" value={this.state.bigBagsAmount} onChange={this.bigBagsOnChange} error={this.state.bigBagsError} errorText={this.state.bigBagsErrorText} info="1000g bag, 14cm x 26cm x 10cm" />
 
-				<InputField name="Box Size" type="number" min="30" max="100" style={{display: "block"}} onChange={this.boxSizeOnChange} error={this.state.boxSizeError} errorText={this.state.boxSizeErrorText} />
+				<InputField name="Box Size (cm)" type="number" min="30" max="100" style={{display: "block"}} onChange={this.boxSizeOnChange} error={this.state.boxSizeError} errorText={this.state.boxSizeErrorText} info="Size should be from 30 to 100 cm" />
 				
 				<button className="submit" onClick={this.onSubmit}>Submit</button>
 			</div>

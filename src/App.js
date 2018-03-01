@@ -22,8 +22,8 @@ class App extends Component {
     return (
       <div>
         <h1>Box Packing Calculator</h1>
-        <p>Calculates how many boxes you need to pack certain amount of bags</p>
-
+        <p>Calculates how many boxes you need, to pack certain amount of bags</p>
+        <p>Check out the code from Github <a href="https://github.com/Desentso/boxPackingCalculator">https://github.com/Desentso/boxPackingCalculator</a></p>
         <Calculator setAnswer={this.setAnswer} />
 
         <Answer boxesData={this.state.boxesData} />

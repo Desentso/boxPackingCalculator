@@ -25,7 +25,7 @@ class Answer extends Component {
 	    return (
 	    	<div>
 	    		<h2>You will need {this.props.boxesData.length} boxes to pack all the bags.</h2>
-	    		<h3>Boxes Fill data: </h3>
+	    		<h3>Boxes Fill Percentage: </h3>
 	    		{data}
 			</div>
 	    );
