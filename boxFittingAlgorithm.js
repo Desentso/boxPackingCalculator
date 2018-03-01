@@ -1,200 +1,207 @@
 
-const smallBag = {width: 16, height: 23, length: 2};
-const mediumBag = {width: 22, height: 26, length: 2};
-const bigBag = {width: 14, height: 26, length: 10};
+function boxFittingAlgorithm(boxSizeInput, bigBags, mediumBags, smallBags) {
 
-//for example
-const boxSize = 50;
-const bigBagsAmount = 0;
-const mediumBagsAmount = 0;
-const smallBagsAmount = 200;
+	const smallBag = {width: 16, height: 23, length: 2};
+	const mediumBag = {width: 22, height: 26, length: 2};
+	const bigBag = {width: 14, height: 26, length: 10};
 
-const box = newBox();
-const boxes = [box];
+	//for example
+	const boxSize = boxSizeInput;
+	const bigBagsAmount = bigBags;
+	const mediumBagsAmount = mediumBags;
+	const smallBagsAmount = smallBags;
+
+	const box = newBox();
+	const boxes = [box];
 
 
-function newBox() {
-	const cont = [];
-	for (let y = 0; y < boxSize; y++){
-		cont.push([]);
-		for (let x = 0; x < boxSize; x++){
-			if (!cont[y][x]) {
-				cont[y].push([]);
-			};
-			for (let z = 0; z < boxSize; z++){
-				cont[y][x][z] = 0;
+	function newBox() {
+		const cont = [];
+		for (let y = 0; y < boxSize; y++){
+			cont.push([]);
+			for (let x = 0; x < boxSize; x++){
+				if (!cont[y][x]) {
+					cont[y].push([]);
+				};
+				for (let z = 0; z < boxSize; z++){
+					cont[y][x][z] = 0;
+				}
 			}
 		}
+		return cont;
 	}
-	return cont;
-}
 
 
-function fitBags() {
-	
-	const bags = [{bags: bigBagsAmount, bag: bigBag, fits: 0, noFit: 0}, {bags: mediumBagsAmount, bag: mediumBag, fits: 0, noFit: 0}, {bags: smallBagsAmount, bag: smallBag, fits: 0, noFit: 0}];
+	function fitBags() {
+		
+		const bags = [{bags: bigBagsAmount, bag: bigBag, fits: 0, noFit: 0}, {bags: mediumBagsAmount, bag: mediumBag, fits: 0, noFit: 0}, {bags: smallBagsAmount, bag: smallBag, fits: 0, noFit: 0}];
 
-	for (let type = 0; type < bags.length; type++){
+		for (let type = 0; type < bags.length; type++){
 
-		for (let i = 0; i < bags[type].bags; i++) {
+			for (let i = 0; i < bags[type].bags; i++) {
 
-			nextBag:
-			for (let b = 0; b < boxes.length; b++){
+				nextBag:
+				for (let b = 0; b < boxes.length; b++){
 
-				if (fitBag(boxes[b], bags[type])) {
-					break nextBag;
-				} else {
-					if (b == boxes.length - 1){
-						const freeBox = newBox();
-						boxes.push(freeBox);
-						fitBag(freeBox, bags[type]);
+					if (fitBag(boxes[b], bags[type])) {
 						break nextBag;
+					} else {
+						if (b == boxes.length - 1){
+							const freeBox = newBox();
+							boxes.push(freeBox);
+							fitBag(freeBox, bags[type]);
+							break nextBag;
+						}
 					}
 				}
-			}
 
-		}
-	}
-
-	console.log(boxSize);
-	console.log(bags);
-
-	return boxes.length;
-}
-
-
-//const rotations = [[bag.width, bag.height, bag.length], [bag.height, bag.width, bag.length], [bag.height, bag.length, bag.width], [bag.length, bag.height, bag.width]]
-
-function fitBag(box, bagData) {
-
-	let noSpace = true;
-	nextBag:
-	for (let y = 0; y < boxSize; y++){
-		for (let z = 0; z < boxSize; z++){
-			for (let x = 0; x < boxSize; x++){
-
-				if (box[y][z][x] == 1){
-					continue;
-				}
-
-				const bag = bagData.bag;
-
-				if (bagFits(box, x, y, z, bag.width, bag.height, bag.length)) {
-
-					//console.log("fits");
-					bagData.fits += 1;
-					noSpace = false;
-					break nextBag;
-
-					//rotate w to h and h to w
-				} else if (bagFits(box, x, y, z, bag.height, bag.width, bag.length)) {
-
-					//console.log("fits");
-					bagData.fits += 1;
-					noSpace = false;
-					break nextBag;
-
-					//rotate w to h, h to l and l to w
-				} else if (bagFits(box, x, y, z, bag.height, bag.length, bag.width)) {
-
-					//console.log("fits");
-					bagData.fits += 1;
-					noSpace = false;
-					break nextBag;
-				 //rotate w to l and l to w
-				} else if (bagFits(box, x, y, z, bag.length, bag.height, bag.width)) {
-
-					//console.log("fits");
-					bagData.fits += 1;
-					noSpace = false;
-					break nextBag;
-				}
 			}
 		}
+
+		console.log(boxSize);
+		console.log(bags);
+
+		return boxes.length;
 	}
 
-	if (noSpace) {
-		//console.log("Didn't find space");
-		bagData.noFit += 1;
-		//Try another box or create a new box and place it there
-		return false;
-	}
 
-	return true;
-}
+	//const rotations = [[bag.width, bag.height, bag.length], [bag.height, bag.width, bag.length], [bag.height, bag.length, bag.width], [bag.length, bag.height, bag.width]]
 
+	function fitBag(box, bagData) {
 
-function bagFits(box, xp, yp, zp, width, height, length) {
-
-	if (xp + width > boxSize || yp + height > boxSize || zp + length > boxSize){
-		return false;
-	} 
-
-	let fits = true;
-	for (let y = yp; y < yp + height; y++){
-		for (let z = zp; z < zp + length; z++){
-			for (let x = xp; x < xp + width; x++){
-
-				if (box[y][z][x] == 0){
-
-				} else {
-					fits = false;
-					//console.log("Y: " + y, "Z: " + z, "X: " + x);
-					break;
-				}
-			}
-		}
-	}
-
-	if (fits) {
-		for (let y = yp; y < yp + height; y++){
-			for (let z = zp; z < zp + length; z++){
-				for (let x = xp; x < xp + width; x++){
-
-					box[y][z][x] = 1;
-				}
-			}
-		}
-	}
-
-	return fits;
-}
-
-
-function getFilledArea () {
-
-	let free = 0;
-	let all = 0;
-
-	const boxesData = [];
-
-	for (let b = 0; b < boxes.length; b++){
-
-		let free = 0;
-		let all = 0;
+		let noSpace = true;
+		nextBag:
 		for (let y = 0; y < boxSize; y++){
 			for (let z = 0; z < boxSize; z++){
 				for (let x = 0; x < boxSize; x++){
 
-					if (boxes[b][y][z][x] == 0){
-						free += 1;
+					if (box[y][z][x] == 1){
+						continue;
 					}
 
-					all += 1;
+					const bag = bagData.bag;
+
+					if (bagFits(box, x, y, z, bag.width, bag.height, bag.length)) {
+
+						//console.log("fits");
+						bagData.fits += 1;
+						noSpace = false;
+						break nextBag;
+
+						//rotate w to h and h to w
+					} else if (bagFits(box, x, y, z, bag.height, bag.width, bag.length)) {
+
+						//console.log("fits");
+						bagData.fits += 1;
+						noSpace = false;
+						break nextBag;
+
+						//rotate w to h, h to l and l to w
+					} else if (bagFits(box, x, y, z, bag.height, bag.length, bag.width)) {
+
+						//console.log("fits");
+						bagData.fits += 1;
+						noSpace = false;
+						break nextBag;
+					 //rotate w to l and l to w
+					} else if (bagFits(box, x, y, z, bag.length, bag.height, bag.width)) {
+
+						//console.log("fits");
+						bagData.fits += 1;
+						noSpace = false;
+						break nextBag;
+					}
 				}
 			}
 		}
-		console.log("BOX " + b + " FILLED: " + ((1 - (free/all))*100).toFixed(2) + "%" );
-		boxesData[b] = {};
-		boxesData[b].filled = 1 - (free/all); 
+
+		if (noSpace) {
+			//console.log("Didn't find space");
+			bagData.noFit += 1;
+			//Try another box or create a new box and place it there
+			return false;
+		}
+
+		return true;
 	}
 
-	//console.log("FILLED: ", 1 - (free/all));
+
+	function bagFits(box, xp, yp, zp, width, height, length) {
+
+		if (xp + width > boxSize || yp + height > boxSize || zp + length > boxSize){
+			return false;
+		} 
+
+		let fits = true;
+		for (let y = yp; y < yp + height; y++){
+			for (let z = zp; z < zp + length; z++){
+				for (let x = xp; x < xp + width; x++){
+
+					if (box[y][z][x] == 0){
+
+					} else {
+						fits = false;
+						//console.log("Y: " + y, "Z: " + z, "X: " + x);
+						break;
+					}
+				}
+			}
+		}
+
+		if (fits) {
+			for (let y = yp; y < yp + height; y++){
+				for (let z = zp; z < zp + length; z++){
+					for (let x = xp; x < xp + width; x++){
+
+						box[y][z][x] = 1;
+					}
+				}
+			}
+		}
+
+		return fits;
+	}
+
+
+	function getFilledArea () {
+
+		let free = 0;
+		let all = 0;
+
+		const boxesData = [];
+
+		for (let b = 0; b < boxes.length; b++){
+
+			let free = 0;
+			let all = 0;
+			for (let y = 0; y < boxSize; y++){
+				for (let z = 0; z < boxSize; z++){
+					for (let x = 0; x < boxSize; x++){
+
+						if (boxes[b][y][z][x] == 0){
+							free += 1;
+						}
+
+						all += 1;
+					}
+				}
+			}
+			console.log("BOX " + b + " FILLED: " + ((1 - (free/all))*100).toFixed(2) + "%" );
+			boxesData[b] = {};
+			boxesData[b].filled = 1 - (free/all); 
+		}
+
+		//console.log("FILLED: ", 1 - (free/all));
+		return boxesData;
+	}
+
+
+	const boxesLength = fitBags();
+	const boxesData = getFilledArea();
+
+	console.log(boxesData);
+
 	return boxesData;
 }
 
-
-const boxesLength = fitBags();
-const boxesData = getFilledArea();
-
-console.log(boxesData);
+module.exports = boxFittingAlgorithm;
