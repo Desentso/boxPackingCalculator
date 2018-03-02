@@ -9,13 +9,18 @@ class App extends Component {
     super(props);
 
     this.state = {
-      boxesData: []
+      boxesData: [],
+      displayCalculating: "none"
     }
   }
 
+  //Set the answer that we get from the Calculator component
   setAnswer = answer => {
-    console.log(answer);
-    this.setState({boxesData: answer});
+    this.setState({boxesData: answer, displayCalculating: "none"});
+  }
+
+  setCalculating = () => {
+    this.setState({displayCalculating: "block"});
   }
 
   render() {
@@ -24,8 +29,9 @@ class App extends Component {
         <h1>Box Packing Calculator</h1>
         <p>Calculates how many boxes you need, to pack certain amount of bags</p>
         <p>Check out the code from Github <a href="https://github.com/Desentso/boxPackingCalculator">https://github.com/Desentso/boxPackingCalculator</a></p>
-        <Calculator setAnswer={this.setAnswer} />
+        <Calculator setAnswer={this.setAnswer} setCalculating={this.setCalculating} />
 
+        <h2 style={{display: this.state.displayCalculating}}>Calculating...</h2>
         <Answer boxesData={this.state.boxesData} />
       </div>
     );

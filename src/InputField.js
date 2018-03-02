@@ -18,9 +18,11 @@ class InputField extends Component {
   }
 
   render() {
+
     let className = this.props.className || "input";
     let displayError = "none";
 
+    //If error, add error class to show error text and styling
     if (this.props.error){
 
       className = className + " error";

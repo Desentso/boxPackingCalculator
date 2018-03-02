@@ -43,6 +43,7 @@ class Calculator extends Component {
 
 		let errors = false;
 
+		//Validate the data
 		Object.keys(data).forEach(key => {
 
 			if (isNaN(data[key])) {
@@ -68,18 +69,37 @@ class Calculator extends Component {
 			}
 		})
 
+		if (data.bigBags == 0 && data.mediumBags == 0 && data.smallBags == 0) {
+			errors = true;
+			this.setState({smallBagsError: true, smallBagsErrorText: "All Can't be zero", mediumBagsError: true, mediumBagsErrorText: "All Can't be zero", bigBagsError: true, bigBagsErrorText: "All Can't be zero", });
+		}
+
 		if (data.boxSize < 30 || data.boxSize > 100){
 			this.setState({boxSizeError: true, boxSizeErrorText: "Box size must be between 30 and 100"});
 			errors = true;
 		}
 
+		//If no errors get estimate from the server
 		if (!errors) {
+			
+			this.setState({smallBagsError: false,mediumBagsError: false,bigBagsError: false, boxSizeError: false});
+			this.props.setCalculating();
 
 			fetch("/estimateBoxes?boxSize=" + data.boxSize + "&bigBags=" + data.bigBags + "&mediumBags=" + data.mediumBags + "&smallBags=" + data.smallBags)
 			.then(resp => resp.json())
 			.then(data => {
-				this.props.setAnswer(data);
-			});
+				if (data.error) {
+					this.props.setAnswer([]);
+					this.setState({boxSizeError: true, boxSizeErrorText: data.error});
+				} else {
+					this.props.setAnswer(data);
+				}
+			})
+			.catch(err => {
+				console.log(err);
+				this.props.setAnswer([]);
+				this.setState({boxSizeError: true, boxSizeErrorText: "Something went wrong"});
+			})
 		}
 	}
 

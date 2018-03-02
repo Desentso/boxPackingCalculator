@@ -2,23 +2,16 @@ import React, { Component } from 'react';
 
 class Answer extends Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-
-		}
-	}
-
   	render() {
 
+  		//If no data (at the start or error) render nothing
   		if (this.props.boxesData.length == 0){
   			return null;
   		}
 
   		const data = [];
   		for (let i = 0; i < this.props.boxesData.length; i++){
-
+  			
   			data.push(<p>Box {i + 1}: {(this.props.boxesData[i].filled*100).toFixed(2)} %</p>)
   		}
 

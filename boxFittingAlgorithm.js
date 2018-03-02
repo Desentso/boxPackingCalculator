@@ -20,9 +20,11 @@ function boxFittingAlgorithm(boxSizeInput, bigBags, mediumBags, smallBags) {
 		for (let y = 0; y < boxSize; y++){
 			cont.push([]);
 			for (let x = 0; x < boxSize; x++){
+
 				if (!cont[y][x]) {
 					cont[y].push([]);
 				};
+
 				for (let z = 0; z < boxSize; z++){
 					cont[y][x][z] = 0;
 				}
@@ -36,7 +38,7 @@ function boxFittingAlgorithm(boxSizeInput, bigBags, mediumBags, smallBags) {
 		
 		const bags = [{bags: bigBagsAmount, bag: bigBag, fits: 0, noFit: 0}, {bags: mediumBagsAmount, bag: mediumBag, fits: 0, noFit: 0}, {bags: smallBagsAmount, bag: smallBag, fits: 0, noFit: 0}];
 
-		//Go through bags starting from the biggest
+		//Go through the bags starting from the biggest
 		for (let type = 0; type < bags.length; type++){
 			for (let i = 0; i < bags[type].bags; i++) {
 
@@ -79,39 +81,43 @@ function boxFittingAlgorithm(boxSizeInput, bigBags, mediumBags, smallBags) {
 
 					const bag = bagData.bag;
 
+					//Check all the possible rotations
 					if (bagFits(box, x, y, z, bag.width, bag.height, bag.length)) {
 
 						bagData.fits += 1;
 						noSpace = false;
-						break nextBag;
-
-						//rotate w to h and h to w
-					} else if (bagFits(box, x, y, z, bag.height, bag.width, bag.length)) {
-
-						bagData.fits += 1;
-						noSpace = false;
-						break nextBag;
-
-						//rotate w to h, h to l and l to w
-					} else if (bagFits(box, x, y, z, bag.height, bag.length, bag.width)) {
+						break nextBag;						
+					}
+					//rotate w to h and h to w
+					if (bagFits(box, x, y, z, bag.height, bag.width, bag.length)) {
 
 						bagData.fits += 1;
 						noSpace = false;
-						break nextBag;
-					 	//rotate w to l and l to w
-					} else if (bagFits(box, x, y, z, bag.length, bag.height, bag.width)) {
+						break nextBag;	
+					}
+					//rotate w to h, h to l and l to w
+					if (bagFits(box, x, y, z, bag.height, bag.length, bag.width)) {
 
 						bagData.fits += 1;
 						noSpace = false;
-						break nextBag;
-						//rotate w to l , h to w and l to w
-					} else if (bagFits(box, x, y, z, bag.length, bag.width, bag.height)) {
+						break nextBag;					 	
+					}
+					//rotate w to l and l to w
+					if (bagFits(box, x, y, z, bag.length, bag.height, bag.width)) {
 
 						bagData.fits += 1;
 						noSpace = false;
-						break nextBag;
-						//rotate h to l and l to h
-					} else if (bagFits(box, x, y, z, bag.width, bag.length, bag.height)) {
+						break nextBag;						
+					}
+					//rotate w to l , h to w and l to w
+					if (bagFits(box, x, y, z, bag.length, bag.width, bag.height)) {
+
+						bagData.fits += 1;
+						noSpace = false;
+						break nextBag;						
+					}
+					//rotate h to l and l to h
+					if (bagFits(box, x, y, z, bag.width, bag.length, bag.height)) {
 
 						bagData.fits += 1;
 						noSpace = false;
@@ -134,7 +140,7 @@ function boxFittingAlgorithm(boxSizeInput, bigBags, mediumBags, smallBags) {
 
 	function bagFits(box, xp, yp, zp, width, height, length) {
 
-		//If over of the box's edges continue
+		//If over of the box's edges
 		if (xp + width > boxSize || yp + height > boxSize || zp + length > boxSize){
 			return false;
 		} 
